@@ -1,12 +1,12 @@
 clc; clear; close;
 
 % READ AND CREATE FRAMES:
-% V = VideoReader('..\..\Videos\face.mp4');
-% V = VideoReader('..\..\Videos\face2.mp4');
-V = VideoReader('..\..\Videos\V66aCUT.mp4');
-% V = VideoReader('..\..\Videos\V66bCUT.mp4');
-% V = VideoReader('..\..\Videos\V85CUT.mp4');
-% V = VideoReader('..\..\Videos\V118CUT.mp4');
+V = VideoReader('Videos\face.mp4');
+% V = VideoReader('Videos\face2.mp4');
+% V = VideoReader('Videos\V66aCUT.mp4');
+% V = VideoReader('Videos\V66bCUT.mp4');
+% V = VideoReader('Videos\V85CUT.mp4');
+% V = VideoReader('Videos\V118CUT.mp4');
 
 frameRate = V.FrameRate;
 numFr = V.NumberOfFrames;
@@ -15,44 +15,29 @@ numFr = V.NumberOfFrames;
 % imshow(insertShape(read(V,1), 'rectangle', nose));
 
 [x, y] = featureTracking(V, forehead, nose);
-% [xn, yn] = featureTrackingNose(V, nose);
 % imshow(insertMarker(read(V,1),[x(:,1) y(:,1)],'+'));
 % figure, imshow(insertMarker(read(V,1),[x2(:,1) y2(:,1)],'+'));
 
 x_interp = cubicSplineInterp(V, x);
 y_interp = cubicSplineInterp(V, y);
-% x_interpn = cubicSplineInterp(V, xn);
-% y_interpn = cubicSplineInterp(V, yn);
 
 x_stable = removeUnstable(x_interp);
 y_stable = removeUnstable(y_interp);
-% x_stablen = removeUnstable(x_interpn);
-% y_stablen = removeUnstable(y_interpn);
 
 x_filtered = temporalFiltering(x_stable);
 y_filtered = temporalFiltering(y_stable);
-% x_filteredn = temporalFiltering(x_stablen);
-% y_filteredn = temporalFiltering(y_stablen);
 
 x_eigVecs1 = applyPCA(x_filtered, 10);
 y_eigVecs1 = applyPCA(y_filtered, 10);
-% x_eigVecs1n = applyPCA(x_filteredn, 10);
-% y_eigVecs1n = applyPCA(y_filteredn, 10);
 
 x_eigVecs2 = applyKICA(x_filtered, 10);
 y_eigVecs2 = applyKICA(y_filtered, 10);
-% x_eigVecs2n = applyKICA(x_filteredn, 10);
-% y_eigVecs2n = applyKICA(y_filteredn, 10);
 
 x_eigVecs3 = applyJade(x_filtered, 10);
 y_eigVecs3 = applyJade(y_filtered, 10);
-% x_eigVecs3n = applyJade(x_filteredn, 10);
-% y_eigVecs3n = applyJade(y_filteredn, 10);
 
 [signal_x, signal_number_x] = signalSelection(x_filtered, x_eigVecs3);
 [signal_y, signal_number_y] = signalSelection(y_filtered, y_eigVecs3);
-[signal_xn, signal_number_xn] = signalSelection(x_filteredn, x_eigVecs3n);
-[signal_yn, signal_number_yn] = signalSelection(y_filteredn, y_eigVecs3n);
 
 % peakDetection
 % pks_x = findpeaks(signal_x(:,signal_number_x));
