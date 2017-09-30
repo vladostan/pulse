@@ -120,9 +120,3 @@ averagePulse = mean(pulse)
 %PCA x = 92 av, y = 78 av
 %ICA x = 79 av, y = 85 av
 %Jade x = 81 av, y = 95 av
-
-%M72C
-%True = 72
-%PCA x = 76.45 av, y = 79.2 av
-%ICA x = 80.82 av, y = 77.86 av
-%Jade x = 71.1 av, y = 81.45 av
