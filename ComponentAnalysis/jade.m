@@ -33,9 +33,6 @@ function [A,S]=jade(X,m)
 % Version 1.5.  Copyright: JF Cardoso.  
 %
 % See notes, references and revision history at the bottom of this file
-
-
-
 [n,T]	= size(X);
 
 %%  source detection not implemented yet !

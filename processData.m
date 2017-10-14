@@ -17,11 +17,47 @@ y_stable = removeUnstable(y_interp);
 
 y_filtered = temporalFiltering(y_stable);
 
-%TODO
-% y_eigVecs = %someComponentAnalysisAlgorithm(y_filtered, number_of_extracted_components)
-%Ex: y_eigVecs = applyPCA(y_filtered, 5);
+% Perform PCA
+y_pca = PCA(y_filtered,5);
 
+% Perform Fast ICA
+y_fica = fastICA(y_filtered,5);
 
+% Perform max-kurtosis ICA
+y_kica = kICA(y_filtered,5);
+
+% Perform Jade
+[~,y_jade] = jade(y_filtered,5);
+
+% Perform Shibbs
+y_shibbs = shibbs(y_filtered',5);
+
+%plot components
+for i = 1:5
+    subplot(2,3,1)
+        plot(y_pca(i,:))
+        title('PCA')
+        
+    subplot(2,3,2)
+        plot(y_fica(i,:))
+        title('Fast ICA')
+
+    subplot(2,3,3)
+        plot(real(y_kica(i,:)))
+        title('Kurtosis ICA')
+
+    subplot(2,3,4)
+        plot(y_jade(i,:))
+        title('Jade')
+
+    subplot(2,3,5)
+        plot(y_shibbs(i,:))
+        title('Shibbs')
+
+    ginput(1);
+end
+
+%% TODO
 %Intuitive selection of component
 [signal_y, signal_number_y] = signalSelection(y_filtered, y_eigVecs);
 
@@ -32,7 +68,7 @@ end
 
 T = size(y_filtered,2);
 
-pks = findpeaks(signal_y(:,signal_number_y));
-[pks, locs] = findpeaks(signal_y(:,signal_number_y),'MinPeakHeight',max(pks)/40,'MinPeakDistance',frameRate/(150/60)*T/numFr);
+pks = findpeaks(signal_y(:,1));
+[pks, locs] = findpeaks(signal_y(:,1),'MinPeakHeight',max(pks)/40,'MinPeakDistance',frameRate/(150/60)*T/numFr);
 pulse = 60*frameRate*T/numFr./diff(locs)'
 averagePulse = mean(pulse)
