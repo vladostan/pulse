@@ -21,7 +21,8 @@ y_filtered = temporalFiltering(y_stable);
 y_pca = PCA(y_filtered,5);
 
 % Perform Fast ICA
-y_fica = fastICA(y_filtered,5);
+y_fica = fastICA(y_filtered,5,'negentropy');
+y_fica2 = fastica2(y_filtered,'numOfIC',5);
 
 % Perform max-kurtosis ICA
 y_kica = kICA(y_filtered,5);
@@ -41,16 +42,20 @@ for i = 1:5
     subplot(2,3,2)
         plot(y_fica(i,:))
         title('Fast ICA')
-
+        
     subplot(2,3,3)
+        plot(y_fica2(i,:))
+        title('Fast ICA 2')
+
+    subplot(2,3,4)
         plot(real(y_kica(i,:)))
         title('Kurtosis ICA')
 
-    subplot(2,3,4)
+    subplot(2,3,5)
         plot(y_jade(i,:))
         title('Jade')
 
-    subplot(2,3,5)
+    subplot(2,3,6)
         plot(y_shibbs(i,:))
         title('Shibbs')
 
