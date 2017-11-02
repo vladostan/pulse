@@ -2,6 +2,9 @@ clc; close all; clear;
 
 load('data/G1data.mat');
 % load('data/G2data.mat');
+% load('data/V1data.mat');
+% load('data/V2data.mat');
+% load('data/facedata.mat');
 
 V.FrameRate = 50;
 V.NumberOfFrames = size(y,2);
