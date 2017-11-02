@@ -16,20 +16,36 @@ y_stable = removeUnstable(y_interp);
 y_filtered = temporalFiltering(y_stable);
 
 % Perform PCA
+tic
 y_pca = PCA(y_filtered,5);
+time_pca = toc;
 
 % Perform Fast ICA
+tic
 y_fica = fastICA(y_filtered,5,'negentropy');
+time_fica = toc;
+
+tic
 y_fica2 = fastica2(y_filtered,'numOfIC',5);
+time_fica2 = toc;
 
 % Perform max-kurtosis ICA
+tic
 y_kica = kICA(y_filtered,5);
+time_kica = toc;
 
 % Perform Jade
+tic
 [~,y_jade] = jade(y_filtered,5);
+time_jade = toc;
 
 % Perform Shibbs
+tic
 y_shibbs = shibbs(y_filtered',5);
+time_shibbs = toc;
+
+% Perform fast RADICAL (VERY SLOW!!!)
+[y_radical, ~] = fast_RADICAL(y_filtered);
 
 %plot components
 for i = 1:5
