@@ -1,15 +1,10 @@
 clc; close all; clear;
 
-data = load('data/G1data.mat');
-% data = load('data/G2data.mat');
+load('data/G1data.mat');
+% load('data/G2data.mat');
 
-y = data.y;
-
-frameRate = 50;
-numFr = size(y,2);
-
-V.FrameRate = frameRate;
-V.NumberOfFrames = numFr;
+V.FrameRate = 50;
+V.NumberOfFrames = size(y,2);
 
 y_interp = cubicSplineInterp(V, y);
 
@@ -75,5 +70,5 @@ T = size(y_filtered,2);
 
 pks = findpeaks(signal_y(:,1));
 [pks, locs] = findpeaks(signal_y(:,1),'MinPeakHeight',max(pks)/40,'MinPeakDistance',frameRate/(150/60)*T/numFr);
-pulse = 60*frameRate*T/numFr./diff(locs)'
+pulse = 60*V.frameRate*T/V.numFr./diff(locs)'
 averagePulse = mean(pulse)
