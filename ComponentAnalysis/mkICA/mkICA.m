@@ -1,4 +1,4 @@
-function [Zica, W, T, mu] = kICA(Z,r)
+function [Zica, W, T, mu] = mkICA(Z,r)
 %
 % Syntax:       Zica = kICA(Z,r);
 %               [Zica, W, T, mu] = kICA(Z,r);
