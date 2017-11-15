@@ -5,8 +5,8 @@ Initial data matrix y (size NxM), where:
     M = number of frames (time in seconds * fps)
 
 Interpolated data matrix y_filtered (N*cM):
-    Applied cubic spline interpolation from 'fps' Hz to 250 Hz,
-    c = 250/fps
+    Applied cubic spline interpolation from 'fps' Hz to samplingRate Hz,
+    c = samplingRate/fps
 
 Stable data matrix y_stable (aN*cM):
     Some unstable feature points are removed, 0 < a < 1

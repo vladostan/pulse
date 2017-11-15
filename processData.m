@@ -12,12 +12,13 @@ V.FrameRate = 50; %For G1,G2,V1,V2data.mat
 % V.FrameRate = 30; %For facedata.mat
 V.NumberOfFrames = size(y,2);
 
-y_interp = cubicSplineInterp(V, y);
+y_interp = cubicSplineInterp(V, y, 1000);
 
 y_stable = removeUnstable(y_interp);
 
 y_filtered = temporalFiltering(y_stable);
 
+%% Component Analysis Part
 % Perform PCA
 tic
 y_pca = PCA(y_filtered,5);

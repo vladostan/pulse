@@ -18,8 +18,8 @@ numFr = V.NumberOfFrames;
 % imshow(insertMarker(read(V,1),[x(:,1) y(:,1)],'+'));
 % figure, imshow(insertMarker(read(V,1),[x2(:,1) y2(:,1)],'+'));
 
-x_interp = cubicSplineInterp(V, x);
-y_interp = cubicSplineInterp(V, y);
+x_interp = cubicSplineInterp(V, x, 1000);
+y_interp = cubicSplineInterp(V, y, 1000);
 
 x_stable = removeUnstable(x_interp);
 y_stable = removeUnstable(y_interp);
