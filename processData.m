@@ -8,21 +8,21 @@ addpath(genpath('ComponentAnalysis'),'ca_data')
 % load('V2data.mat');
 % load('facedata.mat');
 
-load('G1ca.mat');
-% load('G2ca.mat');
-% load('V1ca.mat');
-% load('V2ca.mat');
+%load('g1ca.mat');
+%load('g2ca.mat');
+load('v1ca.mat');
+%load('v2ca.mat');
 % load('faceca.mat');
 
 V.FrameRate = 50; %For G1, G2, V1, V2data.mat
 % V.FrameRate = 30; %For facedata.mat
 V.NumberOfFrames = V.FrameRate*size(y_fica,2)/1000;
 
-% y_interp = cubicSplineInterp(V, y, 1000);
+%  y_interp = cubicSplineInterp(V, y, 1000);
 
-% y_stable = removeUnstable(y_interp);
+%  y_stable = removeUnstable(y_interp);
 
-% y_filtered = temporalFiltering(y_stable);
+%  y_filtered = temporalFiltering(y_stable);
 
 % clear V x y y_interp y_stable 
 
@@ -55,7 +55,13 @@ V.NumberOfFrames = V.FrameRate*size(y_fica,2)/1000;
 % Perform fast RADICAL (VERY SLOW!!!)
 % [y_radical, ~] = fast_RADICAL(y_filtered);
 
-% save('faceca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
+%save('faceca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
+%csvwrite('v1pca.csv', y_pca');
+%csvwrite('v1fica.csv', y_fica');
+%csvwrite('v1mkica.csv', y_mkica');
+%csvwrite('v1jade.csv', y_jade');
+%csvwrite('v1shibbs.csv', y_shibbs');
+
 %% Plot components
 for i = 1:5
     subplot(2,3,1)
