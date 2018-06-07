@@ -8,15 +8,21 @@ addpath(genpath('ComponentAnalysis'),'ca_data')
 % load('V2data.mat');
 % load('facedata.mat');
 
-%load('g1ca.mat');
-%load('g2ca.mat');
-load('v1ca.mat');
-%load('v2ca.mat');
+% load('g1ca.mat');
+% load('g2ca.mat');
+% load('v1ca.mat');
+% load('v2ca.mat');
 % load('faceca.mat');
 
-V.FrameRate = 50; %For G1, G2, V1, V2data.mat
-% V.FrameRate = 30; %For facedata.mat
-V.NumberOfFrames = V.FrameRate*size(y_fica,2)/1000;
+load('ca_data/Geesara_normalca.mat');
+% load('ca_data/Vlad_normalca.mat');
+% load('ca_data/Geesara_phca.mat');
+% load('ca_data/Vlad_phca.mat');
+
+V = VideoReader('data\Videos\Geesara_normal.mp4');
+% V = VideoReader('data\Videos\Vlad_normal.mp4');
+% V = VideoReader('data\Videos\Geesara_ph.mp4');
+% V = VideoReader('data\Videos\Vlad_ph.mp4');
 
 %  y_interp = cubicSplineInterp(V, y, 1000);
 
@@ -87,7 +93,7 @@ for i = 1:5
     ginput(1);
 end
 
-%% TODO
+%% Other stuff
 % %Intuitive selection of component
 % [signal_y, signal_number_y] = signalSelection(y_filtered, y_pca);
 % 

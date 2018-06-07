@@ -1,25 +1,37 @@
 clc; clear; close;
 
 % READ AND CREATE FRAMES:
-V = VideoReader('Videos\face.mp4');
+% V = VideoReader('Videos\face.mp4');
 % V = VideoReader('Videos\face2.mp4');
 % V = VideoReader('Videos\V66aCUT.mp4');
 % V = VideoReader('Videos\V66bCUT.mp4');
 % V = VideoReader('Videos\V85CUT.mp4');
 % V = VideoReader('Videos\V118CUT.mp4');
 
+% NEW
+% V = VideoReader('data\Videos\Geesara_normal.mp4');
+% V = VideoReader('data\Videos\Vlad_normal.mp4');
+% V = VideoReader('data\Videos\Geesara_ph.mp4');
+V = VideoReader('data\Videos\Vlad_ph.mp4');
+
 frameRate = V.FrameRate;
 numFr = V.NumberOfFrames;
 
 [forehead, nose] = roi(V);
-% imshow(insertShape(read(V,1), 'rectangle', nose));
+% foreheadnose = insertShape(read(V,1), 'rectangle', forehead);
+% foreheadnose = insertShape(foreheadnose, 'rectangle', nose);
+% imshow(foreheadnose);
 
 [x, y] = featureTracking(V, forehead, nose);
 % imshow(insertMarker(read(V,1),[x(:,1) y(:,1)],'+'));
 % figure, imshow(insertMarker(read(V,1),[x2(:,1) y2(:,1)],'+'));
 
-x_interp = cubicSplineInterp(V, x, 1000);
-y_interp = cubicSplineInterp(V, y, 1000);
+save('xy_data/Vlad_phdata.mat','x','y');
+
+samplingRate = 250;
+
+x_interp = cubicSplineInterp(V, x, samplingRate);
+y_interp = cubicSplineInterp(V, y, samplingRate);
 
 x_stable = removeUnstable(x_interp);
 y_stable = removeUnstable(y_interp);
@@ -27,6 +39,37 @@ y_stable = removeUnstable(y_interp);
 x_filtered = temporalFiltering(x_stable);
 y_filtered = temporalFiltering(y_stable);
 
+%% Component Analysis Part
+% Perform PCA
+tic
+y_pca = PCA(y_filtered,5);
+time_pca = toc;
+
+% Perform Fast ICA
+tic
+y_fica = fastica(y_filtered, 'lastEig', 10, 'numOfIC', 5);
+time_fica = toc;
+
+% Perform max-kurtosis ICA
+tic
+y_mkica = mkICA(y_filtered,5);
+time_mkica = toc;
+
+% Perform Jade
+tic
+[~,y_jade] = jade(y_filtered,5);
+time_jade = toc;
+
+% Perform Shibbs
+tic
+y_shibbs = shibbs(y_filtered',5);
+time_shibbs = toc;
+
+save('ca_data/Vlad_phca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Other stuff
 x_eigVecs1 = applyPCA(x_filtered, 10);
 y_eigVecs1 = applyPCA(y_filtered, 10);
 
