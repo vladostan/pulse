@@ -1,37 +1,8 @@
 {
-  "file_name":"collect.csv",
   "train_dir":"/build/dataset",
-  "ip":"0.0.0.0",
-  "port":8888,
-  "secondary_port":8889,
-  "test":"True",
-  "receiver_port":4096,
-  "verbose":"False",
-  "train":"True",
-  "is_raw_data":"False",
-  "buffer_capacity":3,
-  "feature_vector_size":384,
-  "window_size":32,
-  "overlap_size":16,
   "sampling_rate":256,
-  "low_frequency":50,
-  "high_frequency":1,
-  "order":2,
   "number_of_channels":5,
   "number_of_principle_component":1,
   "channel_vector":[1,2, 3, 4, 5],
-  "processing": {
-      "train": {
-        "batch_process_threads_num": 1,
-        "num_epochs": 20,
-        "batch_size": 1,
-        "dir": "/",
-        "data_set_name": "ESC-10",
-        "tfrecords_filename": "/build/tfrecords_train/clips_segmentation.tfrecords",
-        "number_of_class": 200,
-        "generated_image_width": 299,
-        "generated_image_height": 299,
-        "generated_image_dir": "/build/generated_images/"
-      }
-  }
+  "window_size":256
 }
