@@ -64,11 +64,11 @@ acs = ACS(project_path, labels, technique_types, threshold_levels, sampling_rate
           recorded_time_duration)
 #acs.execute()
 
-#acs.analysis(is_plot=True, is_apply_dwt=False, label="vlad_v1_", technique_type="jade", theshold_level=0.18
-#             , plot_init=True)
+acs.analysis(is_plot=True, is_apply_dwt=False, label="vlad_v1_", technique_type="jade", theshold_level=0.18
+             , plot_init=True)
 
-signalAnalyzer = SignalAnalyzer("", project_path, None, motion_extraction_position
-                                , sampling_rate=sampling_rate, recorded_time_duration=recorded_time_duration)
-signalAnalyzer.concat_result_based_on_activity("v1")
+#signalAnalyzer = SignalAnalyzer("", project_path, None, motion_extraction_position
+#                                , sampling_rate=sampling_rate, recorded_time_duration=recorded_time_duration)
+#signalAnalyzer.concat_result_based_on_activity("v1")
 
 

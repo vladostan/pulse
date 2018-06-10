@@ -306,6 +306,16 @@ class SignalAnalyzer():
         channels_data = pd.read_csv(self.config["train_dir_abs_location"]
                                             + "/result/"+self.activity_type+"_feature_vectors.csv").dropna()
         nomalized_signal = self.nomalize_signal(channels_data)
+
+        signals_mins = np.array(nomalized_signal).min(axis=0)
+        signals_maxs = np.array(nomalized_signal).max(axis=0)
+        signals_std = 3*np.array(nomalized_signal).std(axis=0)
+
+        removable_points_1 = np.where(np.abs(((signals_mins + signals_std)).astype(int))>0)[0]
+        removable_points_2 = np.where(np.abs(((signals_maxs - signals_std)).astype(int))>0)[0]
+        removable_points = np.unique(np.append(removable_points_1, removable_points_2))
+
+        bad_components = []
         if end==0:
             end = nomalized_signal.shape[0] - 1
 
@@ -328,7 +338,7 @@ class SignalAnalyzer():
             else:
                 detection_points = maxtab[:, 0]
                 difference = [abs(j - i) for i, j in zip(detection_points, detection_points[1:])]
-                if len(difference) == 0:
+                if len(difference) == 0 or k in removable_points:
                     third_momentom = np.inf
                 else:
                     third_momentom = moment(difference, moment=3)
