@@ -30,7 +30,8 @@ from preprocessing.ssa import SingularSpectrumAnalysis
 
 
 class SignalAnalyzer():
-    def __init__(self, activity_type, project_path, dataset_location):
+    def __init__(self, activity_type, project_path, dataset_location, motion_extraction_position
+                 , recorded_time_duration=10, sampling_rate=250):
         self.config_file = project_path + "/config/config.json"
         if dataset_location is not None:
             self.raw_data = pd.read_csv(dataset_location)
@@ -38,11 +39,14 @@ class SignalAnalyzer():
             self.raw_channel_data = self.raw_data.ix[:, 0:5]
             self.channel_length = self.raw_channel_data.shape[1]
         self.signal_types = ["noise_signal", "noise_reduced_signal", "feature_vector"]
+        self.recorded_time_duration = recorded_time_duration
         self.raw_channel_data_set = []
         self.output_buffer = []
         self.activity_type = activity_type
         self.project_path = project_path
         self.dataset_location = dataset_location
+        self.sampling_rate = sampling_rate
+        self.mxp = motion_extraction_position
         self.channels_names = ["component1", "component2", "component3", "component4", "component5"]
         with open(self.config_file) as config:
             self.config = json.load(config)
@@ -154,15 +158,22 @@ class SignalAnalyzer():
             plt.show()
 
 
-    def apply_dwt_for_each_channals(self, nomalized_signal, start, end, pattern_start_at, pattern_end_at, is_apply_dwt, channel_number_to_plot):
+    def apply_dwt_for_each_channals(self, nomalized_signal, start, end, is_apply_dwt, channel_number_to_plot):
         if(is_apply_dwt):
             for i in range(0, self.channel_length):
                 channel_number = i
-                pattern = np.array(nomalized_signal.ix[:, channel_number][pattern_start_at:pattern_end_at])
+                pattern_samples = []
+                for position in self.mxp:
+                    extract_point = position*self.sampling_rate
+                    pattern_sample = np.array(nomalized_signal.ix[:, channel_number][extract_point:extract_point+self.sampling_rate])
+                    pattern_samples.append(pattern_sample)
+
+                pattern_samples = np.array(pattern_samples)
+                pattern = pattern_samples.sum(axis=0)/3
                 result = []
                 possion = []
                 final_result = []
-                size = pattern_end_at - pattern_start_at
+                size = self.sampling_rate
                 counter = start
                 for i in range(0, int(np.floor((end-start)/5))):
                     y = np.array(nomalized_signal.ix[:, channel_number][counter:counter + size])
@@ -194,7 +205,7 @@ class SignalAnalyzer():
             counter = start
             for i in range(0, int(np.floor((end-start)/5))):
             # for i in range(0, 3):
-            #     y = np.array(nomalized_signal.ix[:, channel_number][counter:counter + size]).tolist()
+            #   y = np.array(nomalized_signal.ix[:, channel_number][counter:counter + size]).tolist()
                 y = np.array(nomalized_signal.ix[:, channel_number][counter:counter + size])
                 possion.append(counter)
                 counter += 5
@@ -289,8 +300,8 @@ class SignalAnalyzer():
         fig.colorbar(cax, ticks=[.75, .8, .85, .90, .95, 1])
         plt.show()
 
-    def select_the_best_component(self, start=0, end=0, fsamp=1, is_raw=False, pattern_start_at=0,
-                                  pattern_end_at=200, is_apply_dwt=False, channel_number_to_plot=1,
+    def select_the_best_component(self, start=0, end=0, fsamp=1, is_raw=False, is_apply_dwt=False
+                                  , channel_number_to_plot=1,
                                   theshold_level=0.5, is_plot=False):
         channels_data = pd.read_csv(self.config["train_dir_abs_location"]
                                             + "/result/"+self.activity_type+"_feature_vectors.csv").dropna()
@@ -299,7 +310,7 @@ class SignalAnalyzer():
             end = nomalized_signal.shape[0] - 1
 
         if(is_apply_dwt):
-            self.apply_dwt_for_each_channals(nomalized_signal, start, end, pattern_start_at, pattern_end_at,
+            self.apply_dwt_for_each_channals(nomalized_signal, start, end,
                                              is_apply_dwt, channel_number_to_plot)
 
         is_apply_dwt=False
@@ -308,7 +319,7 @@ class SignalAnalyzer():
         indices_of_channels = []
         for k in range(0, self.channel_length):
             channel_number_to_plot = k
-            distance, possion = self.apply_dwt_for_each_channals(nomalized_signal, start, end, pattern_start_at, pattern_end_at,
+            distance, possion = self.apply_dwt_for_each_channals(nomalized_signal, start, end,
                                                is_apply_dwt, channel_number_to_plot)
             maxtab, mintab = self.lowest_point_detect(distance, theshold_level)
 
@@ -435,7 +446,6 @@ class SignalAnalyzer():
     def concat_result_based_on_activity(self, activity):
         activity_result_storage_location = self.project_path + "/build/result/activity_result/"
         result_storage_location = self.project_path + "/build/result/"
-        final_result = {}
         with open(result_storage_location + "/final_result_"+activity+".csv", 'w') as result_file:
             writer = csv.writer(result_file)
             for filename in glob.iglob(activity_result_storage_location + "*.pickle", recursive=True):
@@ -443,10 +453,13 @@ class SignalAnalyzer():
                     with open(filename, 'rb') as f:
                         result = pickle.load(f, encoding='bytes')
                         info = result["dataset_id"].split("_")
-                        writer.writerow([info[0],info[2], result['number_of_points']*3])
+                        peak_points = np.array(result['peak_points'])
+                        time = (peak_points[-1]-peak_points[0])/256
+                        pulse_rate = (60/time)*self.recorded_time_duration
+                        writer.writerow([info[0],info[2], pulse_rate])
 
-        #with open(final_result_storage_location + "/final_result_"+activity+".pickle", 'wb') as f:
-        #    pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
+        # with open(final_result_storage_location + "/final_result_"+activity+".pickle", 'wb') as f:
+        # pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
     def execute(self, number_of_pin_componenets, activity_type, is_init=False, is_plot=False):
