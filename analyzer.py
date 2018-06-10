@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import csv
+import glob
 import json
 import sys
 
@@ -10,6 +12,7 @@ import pandas as pd
 from scipy.interpolate import interp1d
 from scipy import signal
 from sklearn.decomposition import FastICA, PCA
+from six.moves import cPickle as pickle
 
 from lib.dtw import dtw, fastdtw
 
@@ -28,14 +31,12 @@ from preprocessing.ssa import SingularSpectrumAnalysis
 
 class SignalAnalyzer():
     def __init__(self, activity_type, project_path, dataset_location):
-        self.raw_data = pd.read_csv(dataset_location)
         self.config_file = project_path + "/config/config.json"
-        self.raw_data = self.raw_data.ix[:, 0:5].dropna()
-        self.raw_channel_data = self.raw_data.ix[:, 0:5]
-        self.raw_kiynect_angle_data = self.raw_data.ix[:, 0:3]
-        self.channel_length = self.raw_channel_data.shape[1]
-        self.kinect_angle_length = 3
-        self.angle_names = ["wrist", "elbow", "shoulder"]
+        if dataset_location is not None:
+            self.raw_data = pd.read_csv(dataset_location)
+            self.raw_data = self.raw_data.ix[:, 0:5].dropna()
+            self.raw_channel_data = self.raw_data.ix[:, 0:5]
+            self.channel_length = self.raw_channel_data.shape[1]
         self.signal_types = ["noise_signal", "noise_reduced_signal", "feature_vector"]
         self.raw_channel_data_set = []
         self.output_buffer = []
@@ -137,26 +138,10 @@ class SignalAnalyzer():
                 graph_legend.append(l2)
                 index += 1
 
-            # with open("input.csv", 'w') as f:
-            #     np.savetxt(f, input_signal, delimiter=',', fmt='%.18e')
-
-            # noise_reducer_signal = preprocessor.apply_noise_reducer_filer(input_signal)
-            # l2 = ax.plot(x, noise_reducer_signal, linewidth=3.0, label="noise_reducer_signal")
-            # graph_legend.append(l2)
-
-            # normalize_signal = preprocessor.nomalize_signal(noise_reducer_signal)
-            # l3 = ax.plot(x, normalize_signal, linewidth=1.0, label="normalize_signal")
-            # graph_legend.append(l3)
-
-            # reconstructed_signal = SingularSpectrumAnalysis(noise_reducer_signal, self.config["window_size"], False).execute(1)
-            # l4 = ax.plot(x,reconstructed_signal, linewidth=1.0, label='reconstructed signal with SSA')
-            # graph_legend.append(l4)
-
             handles, labels = ax.get_legend_handles_labels()
             handle_as.append(handles)
             labels_as.append(labels)
             plt.title(self.channels_names[h])
-            # leg = plt.legend(handles=handles, labels=labels)
 
         fig.legend(handles=handle_as[0], labels=labels_as[0])
         fig.text(0.5, 0.04, 'position', ha='center', fontsize=10)
@@ -332,7 +317,10 @@ class SignalAnalyzer():
             else:
                 detection_points = maxtab[:, 0]
                 difference = [abs(j - i) for i, j in zip(detection_points, detection_points[1:])]
-                third_momentom = moment(difference, moment=3)
+                if len(difference) == 0:
+                    third_momentom = np.inf
+                else:
+                    third_momentom = moment(difference, moment=3)
 
                 third_momentoms.append(third_momentom)
                 indices = possion[np.array(maxtab[:, 0], dtype=int)]
@@ -417,45 +405,65 @@ class SignalAnalyzer():
                     lookformax = True
         return np.array(maxtab), np.array(mintab)
 
-    def execute(self, number_of_pin_componenets, activity_type, is_init=False):
+    def store_final_result(self, technique_type_and_label, final_result_storage_location, peak_points, selector
+                           , selected_channel):
+        print(peak_points)
+        print(selector)
+        print("Number of points: {}".format(len(peak_points)))
+        print("Selected channel: {}".format(selected_channel[0] + 1))
+        print("Storing the result...")
+        result_description = {}
+        result_description["dataset_id"] = technique_type_and_label
+        result_description["peak_points"] = peak_points
+        result_description["selector"] = selector
+        result_description["number_of_points"] = len(peak_points)
+        result_description["selected_channel"] = selected_channel[0] + 1
+
+        with open(final_result_storage_location, 'wb') as f:
+            pickle.dump(result_description, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+    def concat_result(self):
+        final_result_storage_location = self.project_path + "/build/result/"
+        final_result = {}
+        for filename in glob.iglob(final_result_storage_location + "*.pickle", recursive=True):
+            with open(filename, 'rb') as f:
+                result = pickle.load(f, encoding='bytes')
+                final_result[result["dataset_id"]] = result
+        with open(final_result_storage_location + "/final_result.pickle", 'wb') as f:
+            pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+    def concat_result_based_on_activity(self, activity):
+        activity_result_storage_location = self.project_path + "/build/result/activity_result/"
+        result_storage_location = self.project_path + "/build/result/"
+        final_result = {}
+        with open(result_storage_location + "/final_result_"+activity+".csv", 'w') as result_file:
+            writer = csv.writer(result_file)
+            for filename in glob.iglob(activity_result_storage_location + "*.pickle", recursive=True):
+                if activity in filename:
+                    with open(filename, 'rb') as f:
+                        result = pickle.load(f, encoding='bytes')
+                        info = result["dataset_id"].split("_")
+                        writer.writerow([info[0],info[2], result['number_of_points']*3])
+
+        #with open(final_result_storage_location + "/final_result_"+activity+".pickle", 'wb') as f:
+        #    pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    def execute(self, number_of_pin_componenets, activity_type, is_init=False, is_plot=False):
         start = 0
         end = 0
         if is_init:
             self.data_reprocessing(number_of_pin_componenets, activity_type)
             self.signal_combine(activity_type)
-        self.plot_processed_singals_by_ssa(start, end, is_raw=False)
+        if is_plot:
+            self.plot_processed_singals_by_ssa(start, end, is_raw=False)
 
 
 
-project_path = "/home/runge/project/pulse"
-
-#label = "g1"
-label = "g2"
-#label = "v1"
-#label = "v2"
-
-technique_type="pca"
-#technique_type="jade"
-#technique_type="shibbs"
-#technique_type="kica"
-#technique_type="fica"
-#technique_type="mkica"
 
 
 
-technique_type_and_label = label + technique_type
-dataset_location = project_path + "/build/dataset/"+technique_type_and_label+".csv"
-number_of_pin_componenets=1
 
-signal_analyzer = SignalAnalyzer(technique_type_and_label, project_path, dataset_location)
-signal_analyzer.execute(number_of_pin_componenets, technique_type_and_label, is_init=True)
-#signal_analyzer.plot_initial_signals(start=0, end=300, with_ssa=False)
-peak_points, selector, selected_channel = signal_analyzer.select_the_best_component(pattern_start_at=0, pattern_end_at=1000, start=0, end=0,
-                                          is_apply_dwt=True, channel_number_to_plot=0, theshold_level=0.1,
-                                          is_plot=True)
-print(peak_points)
-print(selector)
-print("Selected channel: "+ str(selected_channel[0]+1))
 
 
 
