@@ -14,7 +14,15 @@ addpath(genpath('ComponentAnalysis'),'ca_data')
 % load('v2ca.mat');
 % load('faceca.mat');
 
-load('ca_data/Geesara_normalca.mat');
+load('data/xy_data/Geesara_normaldata.mat');
+load('data/xy_data/Vlad_normaldata.mat');
+load('data/xy_data/Geesara_phdata.mat');
+load('data/xy_data/Vlad_phdata.mat');
+
+load('data/ca_data/Geesara_normalca.mat');
+% load('data/ca_data/Vlad_normalca.mat');
+% load('data/ca_data/Geesara_phca.mat');
+% load('data/ca_data/Vlad_phca.mat');
 
 V = VideoReader('data\Videos\Geesara_normal.mp4');
 % V = VideoReader('data\Videos\Vlad_normal.mp4');
@@ -90,7 +98,7 @@ for i = 1:5
     ginput(1);
 end
 
-%% TODO
+%% Other stuff
 % %Intuitive selection of component
 % [signal_y, signal_number_y] = signalSelection(y_filtered, y_pca);
 % 

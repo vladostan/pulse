@@ -14,17 +14,22 @@ addpath(genpath('ComponentAnalysis'),'ca_data')
 % load('v2ca.mat');
 % load('faceca.mat');
 
-load('ca_data/Geesara_normalca.mat');
-% load('ca_data/Vlad_normalca.mat');
-% load('ca_data/Geesara_phca.mat');
-% load('ca_data/Vlad_phca.mat');
+load('data/xy_data/Vlad_normaldata.mat');
+% load('data/xy_data/Vlad_phdata.mat');
+% load('data/xy_data/Geesara_normaldata.mat');
+% load('data/xy_data/Geesara_phdata.mat');
 
-V = VideoReader('data\Videos\Geesara_normal.mp4');
+load('data/ca_data/Vlad_normalca.mat');
+% load('data/ca_data/Vlad_phca.mat');
+% load('data/ca_data/Geesara_normalca.mat');
+% load('data/ca_data/Geesara_phca.mat');
+
 % V = VideoReader('data\Videos\Vlad_normal.mp4');
-% V = VideoReader('data\Videos\Geesara_ph.mp4');
 % V = VideoReader('data\Videos\Vlad_ph.mp4');
+% V = VideoReader('data\Videos\Geesara_normal.mp4');
+% V = VideoReader('data\Videos\Geesara_ph.mp4');
 
-%  y_interp = cubicSplineInterp(V, y, 1000);
+%  y_interp = cubicSplineInterp(V, y, 250);
 
 %  y_stable = removeUnstable(y_interp);
 

@@ -9,29 +9,29 @@ clc; clear; close;
 % V = VideoReader('Videos\V118CUT.mp4');
 
 % NEW
-% V = VideoReader('data\Videos\Geesara_normal.mp4');
 % V = VideoReader('data\Videos\Vlad_normal.mp4');
+% V = VideoReader('data\Videos\Vlad_ph.mp4');
+% V = VideoReader('data\Videos\Geesara_normal.mp4');
 % V = VideoReader('data\Videos\Geesara_ph.mp4');
-V = VideoReader('data\Videos\Vlad_ph.mp4');
 
 frameRate = V.FrameRate;
 numFr = V.NumberOfFrames;
 
 [forehead, nose] = roi(V);
-% foreheadnose = insertShape(read(V,1), 'rectangle', forehead);
-% foreheadnose = insertShape(foreheadnose, 'rectangle', nose);
-% imshow(foreheadnose);
+foreheadnose = insertShape(read(V,1), 'rectangle', forehead, 'LineWidth', 5, 'Color', 'red');
+foreheadnose = insertShape(foreheadnose, 'rectangle', nose, 'LineWidth', 5, 'Color', 'red');
+imshow(foreheadnose);
 
 [x, y] = featureTracking(V, forehead, nose);
-% imshow(insertMarker(read(V,1),[x(:,1) y(:,1)],'+'));
-% figure, imshow(insertMarker(read(V,1),[x2(:,1) y2(:,1)],'+'));
+imshow(insertMarker(foreheadnose,[x(:,1) y(:,1)],'*', 'Size', 5, 'Color', 'green'));
 
-save('xy_data/Vlad_phdata.mat','x','y');
+% save('xy_data/Vlad_phdata.mat','x','y');
 
 samplingRate = 250;
 
 x_interp = cubicSplineInterp(V, x, samplingRate);
 y_interp = cubicSplineInterp(V, y, samplingRate);
+imshow(insertMarker(foreheadnose,[x_interp(:,1) y_interp(:,1)],'*', 'Size', 5, 'Color', 'green'));
 
 x_stable = removeUnstable(x_interp);
 y_stable = removeUnstable(y_interp);
@@ -65,7 +65,7 @@ tic
 y_shibbs = shibbs(y_filtered',5);
 time_shibbs = toc;
 
-save('ca_data/Vlad_phca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
+% save('ca_data/Vlad_phca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
