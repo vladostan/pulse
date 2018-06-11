@@ -33,10 +33,11 @@ class ACS():
         dataset_location = project_path + "/data/extractedComponents/" + technique_type_and_label + ".csv"
         number_of_pin_componenets = 1
         signal_analyzer = SignalAnalyzer(technique_type_and_label, project_path, dataset_location
-                                         , self.motion_extraction_position, self.sampling_rate, self.recorded_time_duration)
+                                         , self.motion_extraction_position, self.recorded_time_duration, self.sampling_rate)
         signal_analyzer.execute(number_of_pin_componenets, technique_type_and_label, is_init=True)
         if plot_init:
-            signal_analyzer.plot_initial_signals(start=0, end=250, with_ssa=True)
+            signal_analyzer.plot_initial_signals(start=0, end=250, with_ssa=False)
+            #signal_analyzer.plot_initial_signals(start=0, end=0, with_ssa=True)
         peak_points, selector, selected_channel = signal_analyzer.select_the_best_component(start=0, end=0,
                                                                                             is_apply_dwt=is_apply_dwt,
                                                                                             channel_number_to_plot=0,
@@ -64,11 +65,12 @@ acs = ACS(project_path, labels, technique_types, threshold_levels, sampling_rate
           recorded_time_duration)
 #acs.execute()
 
-acs.analysis(is_plot=True, is_apply_dwt=False, label="vlad_v1_", technique_type="jade", theshold_level=0.18
-             , plot_init=True)
 
-#signalAnalyzer = SignalAnalyzer("", project_path, None, motion_extraction_position
-#                                , sampling_rate=sampling_rate, recorded_time_duration=recorded_time_duration)
-#signalAnalyzer.concat_result_based_on_activity("v1")
+#acs.analysis(is_plot=True, is_apply_dwt=False, label="vlad_v1_", technique_type="jade", theshold_level=0.18
+#             , plot_init=True)
+
+signalAnalyzer = SignalAnalyzer("", project_path, None, motion_extraction_position
+                                , sampling_rate=sampling_rate, recorded_time_duration=recorded_time_duration)
+signalAnalyzer.concat_result_based_on_activity("v1")
 
 
