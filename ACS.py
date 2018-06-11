@@ -71,6 +71,6 @@ acs = ACS(project_path, labels, technique_types, threshold_levels, sampling_rate
 
 signalAnalyzer = SignalAnalyzer("", project_path, None, motion_extraction_position
                                 , sampling_rate=sampling_rate, recorded_time_duration=recorded_time_duration)
-signalAnalyzer.concat_result_based_on_activity("v2")
+signalAnalyzer.concat_result_based_on_activity("v1")
 
 

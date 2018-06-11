@@ -466,7 +466,7 @@ class SignalAnalyzer():
                     with open(filename, 'rb') as f:
                         result = pickle.load(f, encoding='bytes')
                         info = result["dataset_id"].split("_")
-                        selected_channel = result['selected_channel']
+                        selected_channel = result['selected_channel'][0]
                         peak_points = np.array(result['peak_points'])
                         time = (peak_points[-1]-peak_points[0])/256
                         pulse_rate = (60/time)*self.recorded_time_duration
