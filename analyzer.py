@@ -252,7 +252,7 @@ class SignalAnalyzer():
         plt.show()
 
 
-    def plot_initial_signals(self, start=0, end=0, signal_type='noise_signals',fsamp=1, is_raw=False, with_ssa=False):
+    def plot_initial_signals(self, start=0, end=0, signal_type='noise_signals', with_ssa=False):
         channels_data = pd.read_csv(self.config["train_dir_abs_location"]
                                             + "/result/"+self.activity_type+"_"+signal_type+".csv").dropna()
         noise_removed_data = pd.read_csv(self.config["train_dir_abs_location"]
@@ -269,7 +269,11 @@ class SignalAnalyzer():
             end = channels_data.ix[:, 0].shape[0] - 1
         for i in range(0, 5):
             ax = plt.subplot(510 + i + 1)
-            l1 = ax.plot(channels_data.ix[:, i][start:end], linewidth=1.0, label="Initial Signal")
+            if end == self.sampling_rate:
+                label_name = "Motion of Interest"
+            else :
+                label_name = "Initial Signal"
+            l1 = ax.plot(channels_data.ix[:, i][start:end], linewidth=1.0, label=label_name)
             if with_ssa:
                 l1 = ax.plot(noise_removed_data.ix[:, i][start:end], linewidth=1.0, label="Processed Signal with SSA")
             graph_legend.append(l1)
@@ -315,7 +319,6 @@ class SignalAnalyzer():
         removable_points_2 = np.where(np.abs(((signals_maxs - signals_std)).astype(int))>0)[0]
         removable_points = np.unique(np.append(removable_points_1, removable_points_2))
 
-        bad_components = []
         if end==0:
             end = nomalized_signal.shape[0] - 1
 
@@ -463,10 +466,11 @@ class SignalAnalyzer():
                     with open(filename, 'rb') as f:
                         result = pickle.load(f, encoding='bytes')
                         info = result["dataset_id"].split("_")
+                        selected_channel = result['selected_channel']
                         peak_points = np.array(result['peak_points'])
                         time = (peak_points[-1]-peak_points[0])/256
                         pulse_rate = (60/time)*self.recorded_time_duration
-                        writer.writerow([info[0],info[2], pulse_rate])
+                        writer.writerow([info[0],info[2], pulse_rate, selected_channel])
 
         # with open(final_result_storage_location + "/final_result_"+activity+".pickle", 'wb') as f:
         # pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -480,6 +484,7 @@ class SignalAnalyzer():
             self.signal_combine(activity_type)
         if is_plot:
             self.plot_processed_singals_by_ssa(start, end, is_raw=False)
+            self.plot_initial_signals(with_ssa=True)
 
 
 

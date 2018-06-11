@@ -4,5 +4,5 @@
   "number_of_channels":5,
   "number_of_principle_component":1,
   "channel_vector":[1,2, 3, 4, 5],
-  "window_size":256
+  "window_size":32
 }
