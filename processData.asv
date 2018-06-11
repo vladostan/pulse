@@ -14,22 +14,22 @@ addpath(genpath('ComponentAnalysis'),'ca_data')
 % load('v2ca.mat');
 % load('faceca.mat');
 
-load('data/xy_data/Geesara_normaldata.mat');
 load('data/xy_data/Vlad_normaldata.mat');
-load('data/xy_data/Geesara_phdata.mat');
-load('data/xy_data/Vlad_phdata.mat');
+% load('data/xy_data/Vlad_phdata.mat');
+% load('data/xy_data/Geesara_normaldata.mat');
+% load('data/xy_data/Geesara_phdata.mat');
 
-load('data/ca_data/Geesara_normalca.mat');
-% load('data/ca_data/Vlad_normalca.mat');
-% load('data/ca_data/Geesara_phca.mat');
-% load('data/ca_data/Vlad_phca.mat');
+load('data/ca_data/Vlad_normalca.mat'); %63
+load('data/ca_data/Vlad_phca.mat'); %73
+% load('data/ca_data/Geesara_normalca.mat'); %76
+% load('data/ca_data/Geesara_phca.mat'); %77
 
-V = VideoReader('data\Videos\Geesara_normal.mp4');
 % V = VideoReader('data\Videos\Vlad_normal.mp4');
-% V = VideoReader('data\Videos\Geesara_ph.mp4');
 % V = VideoReader('data\Videos\Vlad_ph.mp4');
+% V = VideoReader('data\Videos\Geesara_normal.mp4');
+% V = VideoReader('data\Videos\Geesara_ph.mp4');
 
-%  y_interp = cubicSplineInterp(V, y, 1000);
+%  y_interp = cubicSplineInterp(V, y, 250);
 
 %  y_stable = removeUnstable(y_interp);
 
@@ -98,18 +98,28 @@ for i = 1:5
     ginput(1);
 end
 
-%% Other stuff
-% %Intuitive selection of component
-% [signal_y, signal_number_y] = signalSelection(y_filtered, y_pca);
-% 
-% %Plot components
-% for i = 1:size(signal_y, 2)
-%     figure(i); plot(signal_y(:,i));
-% end
-% 
-% T = size(y_filtered,2);
-% 
-% pks = findpeaks(signal_y(:,1));
-% [pks, locs] = findpeaks(signal_y(:,1),'MinPeakHeight',max(pks)/40,'MinPeakDistance',frameRate/(150/60)*T/numFr);
-% pulse = 60*V.frameRate*T/V.numFr./diff(locs)'
-% averagePulse = mean(pulse)
+%% Calculate average pulse for every component of each algorithm
+fsamp = 250;
+for i = 1:size(y_pca,1)
+    averagePulse(y_pca(i,:), fsamp)
+end
+for i = 1:size(y_fica,1)
+    averagePulse(y_fica(i,:), fsamp)
+end
+for i = 1:size(y_jade,1)
+    averagePulse(y_jade(i,:), fsamp)
+end
+for i = 1:size(y_mkica,1)
+    averagePulse(y_pca(i,:), fsamp)
+end
+for i = 1:size(y_pca,1)
+    averagePulse(y_pca(i,:), fsamp)
+end
+
+
+
+
+
+
+
+
