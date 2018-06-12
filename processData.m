@@ -1,20 +1,22 @@
 clc; close all; clear;
 
-addpath(genpath('ComponentAnalysis'),'ca_data')  
+addpath(genpath('ComponentAnalysis'),'ca_data');
 
-% load('G1data.mat');
-% load('G2data.mat');
-% load('V1data.mat');
-% load('V2data.mat');
-% load('facedata.mat');
+% OLD STUFF
+% load('data/xy_data/G1data.mat');
+% load('data/xy_data/G2data.mat');
+% load('data/xy_data/V1data.mat');
+% load('data/xy_data/V2data.mat');
+% load('data/xy_data/facedata.mat');
 
-% load('g1ca.mat');
-% load('g2ca.mat');
-% load('v1ca.mat');
+% load('data\ca_data\g1ca.mat');
+% load('data\ca_data\g2ca.mat');
+% load('data\ca_data\v1ca.mat');
 % load('data\ca_data\v2ca.mat');
-% load('faceca.mat');
+% load('data\ca_data\faceca.mat');
 
-% load('data/xy_data/Vlad_normaldata.mat');
+% NEW STUFF
+load('data/xy_data/Vlad_normaldata.mat');
 % load('data/xy_data/Vlad_phdata.mat');
 % load('data/xy_data/Geesara_normaldata.mat');
 % load('data/xy_data/Geesara_phdata.mat');
@@ -24,15 +26,15 @@ load('data/ca_data/Vlad_normalca.mat'); %63
 % load('data/ca_data/Geesara_normalca.mat'); %76
 % load('data/ca_data/Geesara_phca.mat'); %77
 
-% V = VideoReader('data\Videos\Vlad_normal.mp4');
+V = VideoReader('data\Videos\Vlad_normal.mp4');
 % V = VideoReader('data\Videos\Vlad_ph.mp4');
 % V = VideoReader('data\Videos\Geesara_normal.mp4');
 % V = VideoReader('data\Videos\Geesara_ph.mp4');
 
 %  y_interp = cubicSplineInterp(V, y, 250);
-
+% 
 %  y_stable = removeUnstable(y_interp);
-
+% 
 %  y_filtered = temporalFiltering(y_stable);
 
 % clear V x y y_interp y_stable 

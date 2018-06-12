@@ -18,12 +18,12 @@ frameRate = V.FrameRate;
 numFr = V.NumberOfFrames;
 
 [forehead, nose] = roi(V);
-foreheadnose = insertShape(read(V,1), 'rectangle', forehead, 'LineWidth', 5, 'Color', 'red');
-foreheadnose = insertShape(foreheadnose, 'rectangle', nose, 'LineWidth', 5, 'Color', 'red');
-imshow(foreheadnose);
+% foreheadnose = insertShape(read(V,1), 'rectangle', forehead, 'LineWidth', 5, 'Color', 'red');
+% foreheadnose = insertShape(foreheadnose, 'rectangle', nose, 'LineWidth', 5, 'Color', 'red');
+% imshow(foreheadnose);
 
 [x, y] = featureTracking(V, forehead, nose);
-imshow(insertMarker(foreheadnose,[x(:,1) y(:,1)],'*', 'Size', 5, 'Color', 'green'));
+% imshow(insertMarker(foreheadnose,[x(:,1) y(:,1)],'*', 'Size', 5, 'Color', 'green'));
 
 % save('xy_data/Vlad_phdata.mat','x','y');
 
