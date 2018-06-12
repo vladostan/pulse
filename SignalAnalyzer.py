@@ -169,7 +169,7 @@ class SignalAnalyzer():
                     pattern_samples.append(pattern_sample)
 
                 pattern_samples = np.array(pattern_samples)
-                pattern = pattern_samples.sum(axis=0)/3
+                pattern = pattern_samples.sum(axis=0)/len(self.mxp)
                 result = []
                 possion = []
                 final_result = []
@@ -430,7 +430,7 @@ class SignalAnalyzer():
         return np.array(maxtab), np.array(mintab)
 
     def store_final_result(self, technique_type_and_label, final_result_storage_location, peak_points, selector
-                           , selected_channel):
+                           , selected_channel, ground_truth):
         print(peak_points)
         print(selector)
         print("Number of points: {}".format(len(peak_points)))
@@ -442,6 +442,7 @@ class SignalAnalyzer():
         result_description["selector"] = selector
         result_description["number_of_points"] = len(peak_points)
         result_description["selected_channel"] = selected_channel[0] + 1
+        result_description["ground_truth"] = ground_truth
 
         with open(final_result_storage_location, 'wb') as f:
             pickle.dump(result_description, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -461,16 +462,19 @@ class SignalAnalyzer():
         result_storage_location = self.project_path + "/build/result/"
         with open(result_storage_location + "/final_result_"+activity+".csv", 'w') as result_file:
             writer = csv.writer(result_file)
+            writer.writerow(["name", "technique", "pulse_rate", "error", "selected_component"])
             for filename in glob.iglob(activity_result_storage_location + "*.pickle", recursive=True):
                 if activity in filename:
                     with open(filename, 'rb') as f:
                         result = pickle.load(f, encoding='bytes')
                         info = result["dataset_id"].split("_")
                         selected_channel = result['selected_channel'][0]
+                        ground_truth = result['ground_truth']
                         peak_points = np.array(result['peak_points'])
-                        time = (peak_points[-1]-peak_points[0])/256
-                        pulse_rate = (60/time)*self.recorded_time_duration
-                        writer.writerow([info[0],info[2], pulse_rate, selected_channel])
+                        time = (peak_points[-1]-peak_points[0])/250
+                        pulse_rate = (60/time)*len(peak_points)
+                        error = (1 - (pulse_rate/ground_truth))**2
+                        writer.writerow([info[0],info[2], pulse_rate, error, selected_channel])
 
         # with open(final_result_storage_location + "/final_result_"+activity+".pickle", 'wb') as f:
         # pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -485,14 +489,3 @@ class SignalAnalyzer():
         if is_plot:
             self.plot_processed_singals_by_ssa(start, end, is_raw=False)
             self.plot_initial_signals(with_ssa=True)
-
-
-
-
-
-
-
-
-
-
-
