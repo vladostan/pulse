@@ -2,31 +2,30 @@ clc; close all; clear;
 
 addpath(genpath('ComponentAnalysis'),'ca_data');
 
-% OLD STUFF
-% load('data/xy_data/G1data.mat');
-% load('data/xy_data/G2data.mat');
-% load('data/xy_data/V1data.mat');
-% load('data/xy_data/V2data.mat');
-% load('data/xy_data/facedata.mat');
-
-% load('data\ca_data\g1ca.mat');
-% load('data\ca_data\g2ca.mat');
-% load('data\ca_data\v1ca.mat');
-% load('data\ca_data\v2ca.mat');
-% load('data\ca_data\faceca.mat');
-
-% NEW STUFF
-load('data/xy_data/Vlad_normaldata.mat');
+% XY DATA
+% load('data/xy_data/Vlad_normaldata.mat');
 % load('data/xy_data/Vlad_phdata.mat');
 % load('data/xy_data/Geesara_normaldata.mat');
 % load('data/xy_data/Geesara_phdata.mat');
 
-load('data/ca_data/Vlad_normalca.mat'); %63
-% load('data/ca_data/Vlad_phca.mat'); %73
-% load('data/ca_data/Geesara_normalca.mat'); %76
-% load('data/ca_data/Geesara_phca.mat'); %77
+% CA DATA
+% load('data/ca_data/Vlad_normalca.mat');
+% load('data/ca_data/Vlad_phca.mat');
+% load('data/ca_data/Geesara_normalca.mat');
+% load('data/ca_data/Geesara_phca.mat');
+% load('data/ca_data/Stanislav_normalca.mat');
+% load('data/ca_data/Stanislav_phca.mat');
+% load('data/ca_data/Ilya_normalca.mat');
+% load('data/ca_data/Ilya_phca.mat');
+% load('data/ca_data/Alexander_normalca.mat');
+% load('data/ca_data/Alexander_phca.mat');
+% load('data/ca_data/Mikhail_normalca.mat');
+% load('data/ca_data/Mikhail_phca.mat');
+% load('data/ca_data/Vadim_normalca.mat');
+% load('data/ca_data/Vadim_phca.mat');
 
-V = VideoReader('data\Videos\Vlad_normal.mp4');
+% Videos
+% V = VideoReader('data\Videos\Vlad_normal.mp4');
 % V = VideoReader('data\Videos\Vlad_ph.mp4');
 % V = VideoReader('data\Videos\Geesara_normal.mp4');
 % V = VideoReader('data\Videos\Geesara_ph.mp4');
