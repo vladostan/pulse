@@ -50,7 +50,7 @@ class SignalAnalyzer():
         self.channels_names = ["component1", "component2", "component3", "component4", "component5"]
         with open(self.config_file) as config:
             self.config = json.load(config)
-            self.config["train_dir_abs_location"] = self.project_path + "/build/dataset/train"
+            self.config["train_dir_abs_location"] = self.project_path + "/result/dataset/train"
 
     def nomalize_signal(self, input_signal):
         mean = np.mean(input_signal, axis=0)
@@ -448,7 +448,7 @@ class SignalAnalyzer():
             pickle.dump(result_description, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def concat_result(self):
-        final_result_storage_location = self.project_path + "/build/result/"
+        final_result_storage_location = self.project_path + "/result/final_result/"
         final_result = {}
         for filename in glob.iglob(final_result_storage_location + "*.pickle", recursive=True):
             with open(filename, 'rb') as f:
@@ -458,8 +458,8 @@ class SignalAnalyzer():
             pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def concat_result_based_on_activity(self, activity):
-        activity_result_storage_location = self.project_path + "/build/result/activity_result/"
-        result_storage_location = self.project_path + "/build/result/"
+        activity_result_storage_location = self.project_path + "/result/final_result/activity_result/"
+        result_storage_location = self.project_path + "/result/final_result/"
         with open(result_storage_location + "/final_result_"+activity+".csv", 'w') as result_file:
             writer = csv.writer(result_file)
             writer.writerow(["name", "technique", "pulse_rate", "error", "selected_component"])
