@@ -3,32 +3,16 @@ clc; close all; clear;
 addpath(genpath('ComponentAnalysis'),'ca_data');
 
 % XY DATA
-% load('data/xy_data/Vlad_normaldata.mat');
-% load('data/xy_data/Vlad_phdata.mat');
-% load('data/xy_data/Geesara_normaldata.mat');
-% load('data/xy_data/Geesara_phdata.mat');
+load('data/xy_data/p1_normal_xy.mat');
+% load('data/xy_data/p1_physical_xy.mat');
 
 % CA DATA
-% load('data/ca_data/Vlad_normalca.mat');
-% load('data/ca_data/Vlad_phca.mat');
-% load('data/ca_data/Geesara_normalca.mat');
-% load('data/ca_data/Geesara_phca.mat');
-% load('data/ca_data/Stanislav_normalca.mat');
-% load('data/ca_data/Stanislav_phca.mat');
-% load('data/ca_data/Ilya_normalca.mat');
-% load('data/ca_data/Ilya_phca.mat');
-% load('data/ca_data/Alexander_normalca.mat');
-% load('data/ca_data/Alexander_phca.mat');
-% load('data/ca_data/Mikhail_normalca.mat');
-% load('data/ca_data/Mikhail_phca.mat');
-% load('data/ca_data/Vadim_normalca.mat');
-% load('data/ca_data/Vadim_phca.mat');
+load('data/ca_data/p1_normal_ca.mat');
+% load('data/ca_data/p1_physical_ca.mat');
 
 % Videos
-% V = VideoReader('data\Videos\Vlad_normal.mp4');
-% V = VideoReader('data\Videos\Vlad_ph.mp4');
-% V = VideoReader('data\Videos\Geesara_normal.mp4');
-% V = VideoReader('data\Videos\Geesara_ph.mp4');
+V = VideoReader('data/Videos/p1_normal.mp4');
+% V = VideoReader('data/Videos/p1_physical.mp4');
 
 %  y_interp = cubicSplineInterp(V, y, 250);
 % 
