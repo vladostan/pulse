@@ -18,7 +18,7 @@ class ACS():
 
     def execute(self, is_apply_dwt=False):
         for label in self.labels:
-            person_id = label.split("_")[0]
+            person_id = label.split("_")[0] + "_" + label.split("_")[1]
             threshold_levels_of_correct_label = self.threshold_levels[person_id]
             ground_truth = self.ground_truth[label]
             for technique_type, threshold_level in zip(self.technique_types, threshold_levels_of_correct_label):
@@ -84,32 +84,37 @@ class ACS():
 
 
 project_path = "/home/runge/project/pulse"
-#labels = ["vlad_v2_"]
-labels = ["vlad_v2_", "geesara_v2_", "vlad_v1_", "geesara_v1_"]
+labels = []
 technique_types = ["fica", "pca", "jade", "shibbs"]
-type_of_activities = ["v1", "v2"]
-
-threshold_levels = {}
-threshold_levels["geesara"] =  [0.06, 0.08, 0.07, 0.10]
-threshold_levels["vlad"] = [0.06, 0.08, 0.07, 0.10]
-
-ground_truth = {}
-ground_truth["geesara_v1_"] = 76
-ground_truth["geesara_v2_"] = 77
-ground_truth["vlad_v1_"] = 63
-ground_truth["vlad_v2_"] = 76
-
+type_of_activities = ["normal", "high"]
 motion_extraction_position = [2, 8, 16]
-
-#technique_types = ["fica0.12", "pca0.22", "jade0.18", "shibbs0.22"]
-#technique_types = ["shibbs"]
 sampling_rate = 250
 recorded_time_duration = 20
 
+for activity_type in type_of_activities:
+    for x in range(1,8):
+        labels.append("person_" + str(x) + "_"+activity_type+ "_")
+
+threshold_levels = {}
+threshold_levels["person_1"] =  [0.06, 0.08, 0.07, 0.10]
+threshold_levels["person_2"] = [0.06, 0.08, 0.07, 0.10]
+threshold_levels["person_3"] = [0.06, 0.08, 0.07, 0.10]
+threshold_levels["person_4"] = [0.06, 0.08, 0.07, 0.10]
+threshold_levels["person_5"] = [0.06, 0.08, 0.07, 0.10]
+threshold_levels["person_6"] = [0.06, 0.08, 0.07, 0.10]
+threshold_levels["person_7"] = [0.06, 0.08, 0.07, 0.10]
+
+ground_truth_file = project_path + "data/ECG/groundtruth.csv"
+ground_truth_data = list(np.loadtxt(ground_truth_file, str, delimiter='\n'))
+ground_truth = {}
+for detail in ground_truth_data:
+    detail = detail.split(":")
+    ground_truth[detail[0]] = int(detail[1])
+
 acs = ACS(project_path, labels, technique_types, threshold_levels, sampling_rate, motion_extraction_position,
           ground_truth, recorded_time_duration)
-#acs.execute()
-acs.calculate_accuray_based_on_activity( type_of_activities, technique_types, None)
+acs.execute(is_apply_dwt=True)
+#acs.calculate_accuray_based_on_activity( type_of_activities, technique_types, None)
 
 
 # acs.analysis(is_plot=False, is_apply_dwt=False, label="geesara_v1_", technique_type="jade", theshold_level=0.07, plot_init=False)
