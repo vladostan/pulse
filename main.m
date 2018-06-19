@@ -1,26 +1,8 @@
 clc; clear; close;
 
 % Videos
-% V = VideoReader('data\Videos\Vlad_normal.mp4');
-% V = VideoReader('data\Videos\Vlad_ph.mp4');
-% V = VideoReader('data\Videos\Geesara_normal.mp4');
-% V = VideoReader('data\Videos\Geesara_ph.mp4');
-% V = VideoReader('data\Videos\Stanislav_normal.mp4');
-% V = VideoReader('data\Videos\Stanislav_ph.mp4');
-% V = VideoReader('data\Videos\Ilya_normal.mp4');
-% V = VideoReader('data\Videos\Ilya_ph.mp4');
-% V = VideoReader('data\Videos\Alexander_normal.mp4');
-% V = VideoReader('data\Videos\Alexander_ph.mp4');
-% V = VideoReader('data\Videos\Mikhail_normal.mp4');
-% V = VideoReader('data\Videos\Mikhail_ph.mp4');
-% V = VideoReader('data\Videos\Vadim_normal.mp4');
-% V = VideoReader('data\Videos\Vadim_ph.mp4');
-% V = VideoReader('data\Videos\Maksim_normal.mp4');
-% V = VideoReader('data\Videos\Maksim_ph.mp4');
-% V = VideoReader('data\Videos\Sergey_normal.mp4');
-% V = VideoReader('data\Videos\Sergey_ph.mp4');
-% V = VideoReader('data\Videos\Mike_normal.mp4');
-% V = VideoReader('data\Videos\Mike_ph.mp4');
+V = VideoReader('data\Videos\p1_normal.mp4');
+% V = VideoReader('data\Videos\p1_physical.mp4');
 
 frameRate = V.FrameRate;
 numFr = V.NumberOfFrames;
@@ -34,7 +16,7 @@ imshow(foreheadnose);
 % imshow(insertMarker(foreheadnose,[x(:,1) y(:,1)],'*', 'Size', 5, 'Color', 'green'));
 
 %%
-save('data/xy_data/Mike_normaldata.mat','x','y');
+% save('data/xy_data/p18_physical_xy.mat','x','y');
 
 samplingRate = 250;
 
@@ -75,7 +57,7 @@ tic
 y_shibbs = shibbs(y_filtered',5);
 time_shibbs = toc;
 
-save('data/ca_data/Mike_normalca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
+% save('data/ca_data/p18_physical_ca.mat','y_pca','y_fica','y_mkica','y_jade','y_shibbs','time_pca','time_fica','time_mkica','time_jade','time_shibbs');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
