@@ -3,7 +3,7 @@ clc; close all; clear;
 addpath(genpath('ComponentAnalysis'), 'data');
 
 % XY DATA
-load('data/xy_data/p1_normal_xy.mat');
+load('data/xy_data/pid_normal_xy.mat');
 % load('data/xy_data/pid_physical_xy.mat');
 
 % CA DATA
@@ -11,7 +11,7 @@ load('data/ca_data/pid_normal_ca.mat');
 % load('data/ca_data/pid_physical_ca.mat');
 
 % Videos
-V = VideoReader('data/Videos/p1_normal.mp4');
+V = VideoReader('data/Videos/pid_normal.mp4');
 % V = VideoReader('data/Videos/pid_physical.mp4');
 
  y_interp = cubicSplineInterp(V, y, 250);
