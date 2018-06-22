@@ -1,22 +1,23 @@
 clc; close all; clear;
 
-addpath(genpath('ComponentAnalysis'),'ca_data');
+addpath(genpath('ComponentAnalysis'),'data');
 
 % XY DATA
 load('data/xy_data/p1_normal_xy.mat');
 % load('data/xy_data/p1_physical_xy.mat');
 
 % CA DATA
-load('data/ca_data/p1_normal_ca.mat');
+% load('data/ca_data/p1_normal_ca.mat');
 % load('data/ca_data/p1_physical_ca.mat');
 
 % Videos
 V = VideoReader('data/Videos/p1_normal.mp4');
 % V = VideoReader('data/Videos/p1_physical.mp4');
 
-%  y_interp = cubicSplineInterp(V, y, 250);
-% 
-%  y_stable = removeUnstable(y_interp);
+ y_interp = cubicSplineInterp(V, y, 250);
+
+ y_stable = removeUnstable(y_interp);
+%%
 % 
 %  y_filtered = temporalFiltering(y_stable);
 
