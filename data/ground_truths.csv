@@ -17,8 +17,8 @@ p8_normal,98.0592
 p8_physical,98.1013
 p9_normal,53.1804
 p9_physical,57.2034
-p10_normal,55.0718
-p10_physical,72.0251
+p10_normal,82.6709
+p10_physical,90.045
 p11_normal,64.1711
 p11_physical,70.4376
 p12_normal,54.4872
@@ -27,9 +27,5 @@ p13_normal,65.9686
 p13_physical,65.9686
 p14_normal,64.5161
 p14_physical,95.8763
-p15_normal,66.8435
-p15_physical,86.3539
-p16_normal,82.6709
-p16_physical,90.045
-p17_normal,78.274
-p17_physical,71.9125
+p15_normal,78.274
+p15_physical,71.9125

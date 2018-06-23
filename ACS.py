@@ -124,7 +124,7 @@ sampling_rate = 250
 recorded_time_duration = 20
 
 for activity_type in type_of_activities:
-    for x in range(1,18):
+    for x in range(1,16):
         labels.append("p" + str(x) + "_"+activity_type+ "_")
 
 ground_truth_file = project_path + "/data/ground_truths.csv"
@@ -141,7 +141,7 @@ for detail in ground_truth_data:
 
 acs = ACS(project_path, labels, technique_types, threshold_levels, sampling_rate, motion_extraction_position,
           ground_truth, recorded_time_duration)
-#acs.execute(is_apply_dwt=False)
+#acs.execute(is_apply_dwt=True)
 
 
 #acs.analysis(is_plot=False, is_apply_dwt=False, label="p2_normal_", technique_type="jade", theshold_level=0.07, plot_init=True)
