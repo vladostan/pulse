@@ -19,13 +19,4 @@ Component Analysis matrix y_xxx (b*cM):
 
 ## Data from video ##
 
-    'G1','G2','V1','V2' data: 50 fps
-    'face' and other data: 30 fps
-
-## Average Pulse (Ground Truth data) ##
-
-    G1: 85 bpm
-    G2: 93 bpm
-    V1: 83 bpm
-    V2: 106 bpm
-    face: 53 bpm
+    All videos are full HD at 25 fps

@@ -1,5 +1,7 @@
 function av = averagePulse(signal, fsamp) 
 
+% Frequency domain average pulse calculation
+
 T = 1/fsamp;                     % Sample time
 L = length(signal);              % Length of signal
 
