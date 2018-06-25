@@ -64,7 +64,7 @@ class ACS():
             df_normal = pd.read_csv(final_result_normal)
             df_physical = pd.read_csv(final_result_physical)
             writer = csv.writer(result_file, delimiter='&')
-            for id in range(1, 18):
+            for id in range(1, int(len(df_normal)/4)+1):
                 id = "p" + str(id)
                 df_normal__ = df_normal[df_normal.name == id]
                 df_physical__ = df_physical[df_physical.name == id]
@@ -141,16 +141,17 @@ for detail in ground_truth_data:
 
 acs = ACS(project_path, labels, technique_types, threshold_levels, sampling_rate, motion_extraction_position,
           ground_truth, recorded_time_duration)
-#acs.execute(is_apply_dwt=True)
+acs.execute(is_apply_dwt=False)
 
 
 #acs.analysis(is_plot=False, is_apply_dwt=False, label="p2_normal_", technique_type="jade", theshold_level=0.07, plot_init=True)
 
 signalAnalyzer = SignalAnalyzer("", project_path, None, motion_extraction_position, sampling_rate=sampling_rate
                                 , recorded_time_duration=recorded_time_duration)
-#for activity in type_of_activities:
-#    signalAnalyzer.concat_result_based_on_activity(activity)
+for activity in type_of_activities:
+    signalAnalyzer.concat_result_based_on_activity(activity)
 
+#signalAnalyzer.concat_result()
 
 acs.calculate_accuray_based_on_activity( type_of_activities, technique_types, None)
 acs.calculate_final_result(technique_types)
