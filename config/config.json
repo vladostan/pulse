@@ -1,8 +1,8 @@
 {
-  "train_dir":"/build/dataset",
+  "train_dir":"/result/dataset",
   "sampling_rate":256,
   "number_of_channels":5,
   "number_of_principle_component":1,
-  "channel_vector":[1,2, 3, 4, 5],
+  "channel_vector":[1, 2, 3, 4, 5],
   "window_size":32
 }

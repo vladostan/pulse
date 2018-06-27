@@ -47,10 +47,10 @@ class SignalAnalyzer():
         self.dataset_location = dataset_location
         self.sampling_rate = sampling_rate
         self.mxp = motion_extraction_position
-        self.channels_names = ["component1", "component2", "component3", "component4", "component5"]
+        self.channels_names = ["com1", "com2", "com3", "com4", "com5"]
         with open(self.config_file) as config:
             self.config = json.load(config)
-            self.config["train_dir_abs_location"] = self.project_path + "/build/dataset/train"
+            self.config["train_dir_abs_location"] = self.project_path + "/result/dataset/train"
 
     def nomalize_signal(self, input_signal):
         mean = np.mean(input_signal, axis=0)
@@ -289,19 +289,16 @@ class SignalAnalyzer():
         self.correlation_matrix(channels_data)
 
     def correlation_matrix(self, df):
-        from matplotlib import pyplot as plt
         from matplotlib import cm as cm
-
-        fig = plt.figure()
-        ax1 = fig.add_subplot(111)
         cmap = cm.get_cmap('jet', 30)
-        cax = ax1.imshow(df.corr(), cmap=cmap)
-        #ax1.grid(True)
-        #plt.title('Feature Correlation')
-        labels = self.channels_names
-        ax1.set_xticklabels(labels, fontsize=10)
-        ax1.set_yticklabels(labels, fontsize=10)
-        fig.colorbar(cax, ticks=[.75, .8, .85, .90, .95, 1])
+        matplotlib.rc('xtick', labelsize=34)
+        matplotlib.rc('ytick', labelsize=34)
+        corr = df.corr()
+        fig, ax = plt.subplots(figsize=(12, 12))
+        cax = ax.imshow(corr, cmap=cmap)
+        fig.colorbar(cax)
+        plt.xticks(range(len(self.channels_names)), self.channels_names)
+        plt.yticks(range(len(self.channels_names)), self.channels_names)
         plt.show()
 
     def select_the_best_component(self, start=0, end=0, fsamp=1, is_raw=False, is_apply_dwt=False
@@ -448,7 +445,7 @@ class SignalAnalyzer():
             pickle.dump(result_description, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def concat_result(self):
-        final_result_storage_location = self.project_path + "/build/result/"
+        final_result_storage_location = self.project_path + "/result/final_result/"
         final_result = {}
         for filename in glob.iglob(final_result_storage_location + "*.pickle", recursive=True):
             with open(filename, 'rb') as f:
@@ -458,11 +455,11 @@ class SignalAnalyzer():
             pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def concat_result_based_on_activity(self, activity):
-        activity_result_storage_location = self.project_path + "/build/result/activity_result/"
-        result_storage_location = self.project_path + "/build/result/"
+        activity_result_storage_location = self.project_path + "/result/final_result/activity_result/"
+        result_storage_location = self.project_path + "/result/final_result/"
         with open(result_storage_location + "/final_result_"+activity+".csv", 'w') as result_file:
             writer = csv.writer(result_file)
-            writer.writerow(["name", "technique", "pulse_rate", "error", "selected_component"])
+            writer.writerow(["name", "technique", "pulse_rate", "ground_truth", "error", "selected_component"])
             for filename in glob.iglob(activity_result_storage_location + "*.pickle", recursive=True):
                 if activity in filename:
                     with open(filename, 'rb') as f:
@@ -473,8 +470,8 @@ class SignalAnalyzer():
                         peak_points = np.array(result['peak_points'])
                         time = (peak_points[-1]-peak_points[0])/250
                         pulse_rate = (60/time)*len(peak_points)
-                        error = (1 - (pulse_rate/ground_truth))**2
-                        writer.writerow([info[0],info[2], pulse_rate, error, selected_channel])
+                        error = (pulse_rate-ground_truth)**2
+                        writer.writerow([info[0],info[2], pulse_rate, ground_truth, error, selected_channel])
 
         # with open(final_result_storage_location + "/final_result_"+activity+".pickle", 'wb') as f:
         # pickle.dump(final_result, f, protocol=pickle.HIGHEST_PROTOCOL)

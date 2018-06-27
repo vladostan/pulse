@@ -10,6 +10,25 @@ load('data/xy_data/pid_normal_xy.mat');
 load('data/ca_data/pid_normal_ca.mat');
 % load('data/ca_data/pid_physical_ca.mat');
 
+
+% %activity = 'normal'
+% activity = 'physical'
+%
+%
+% for id = 1:17
+% % CA DATA
+%
+%     load(['data/ca_data/p' num2str(id) '_' activity '_ca.mat']);
+%     %
+%
+%     csvwrite(['data/extractedComponents/p' num2str(id) '_' activity '_pca.csv'], y_pca');
+%     csvwrite(['data/extractedComponents/p' num2str(id) '_' activity '_fica.csv'], y_fica');
+%     csvwrite(['data/extractedComponents/p' num2str(id) '_' activity '_mkica.csv'], y_mkica');
+%     csvwrite(['data/extractedComponents/p' num2str(id) '_' activity '_jade.csv'], y_jade');
+%     csvwrite(['data/extractedComponents/p' num2str(id) '_' activity '_shibbs.csv'], y_shibbs');
+% end
+
+
 % Videos
 V = VideoReader('data/Videos/pid_normal.mp4');
 % V = VideoReader('data/Videos/pid_physical.mp4');
